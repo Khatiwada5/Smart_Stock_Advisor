@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Smart Stock Advisor</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand-lockup">
+          <span class="brand-mark">S</span>
+          <div>
+            <p class="eyebrow">Smart Stock</p>
+            <h1>Advisor</h1>
+          </div>
+        </div>
+
+        <nav class="side-nav" aria-label="Primary">
+          <a href="#overview" class="active">Overview</a>
+          <a href="#trade">Trade Ticket</a>
+          <a href="#advisor">AI Advisor</a>
+          <a href="#holdings">Holdings</a>
+        </nav>
+
+        <div class="sidebar-actions">
+          <button class="ghost-button" id="seedDemoButton" type="button">Load Demo</button>
+          <button class="ghost-button danger" id="clearButton" type="button">Clear Data</button>
+        </div>
+      </aside>
+
+      <main class="workspace">
+        <header class="topbar" id="overview">
+          <div>
+            <p class="eyebrow">Portfolio dashboard</p>
+            <h2>Your investing command center</h2>
+          </div>
+          <div class="status-pill">Live demo</div>
+        </header>
+
+        <section class="hero-panel">
+          <div class="hero-copy">
+            <span>Current Value</span>
+            <strong id="totalValue">$0.00</strong>
+            <p>Track fractional buys, average cost, ROI, and market signals in one focused workspace.</p>
+          </div>
+          <div class="summary-grid" aria-label="Portfolio summary">
+            <article class="metric">
+              <span>Total Cost</span>
+              <strong id="totalCost">$0.00</strong>
+            </article>
+            <article class="metric">
+              <span>Total Return</span>
+              <strong id="totalReturn">$0.00</strong>
+            </article>
+            <article class="metric">
+              <span>Portfolio ROI</span>
+              <strong id="totalChange">0.00%</strong>
+            </article>
+          </div>
+        </section>
+
+        <section class="dashboard-grid">
+          <div class="left-column">
+            <form class="panel form-panel" id="stockForm">
+              <div class="panel-heading">
+                <div>
+                  <h2 id="trade">Add Buy</h2>
+                  <p id="formMode">Dollar amount first</p>
+                </div>
+              </div>
+
+              <input id="editIndex" type="hidden">
+
+              <label>
+                Ticker
+                <input id="ticker" name="ticker" placeholder="AAPL" autocomplete="off" required>
+              </label>
+
+              <label>
+                Amount Bought
+                <input id="amountInvested" name="amountInvested" inputmode="decimal" min="0.01" step="0.01" placeholder="50.00" type="number" required>
+              </label>
+
+              <div class="field-row">
+                <label>
+                  Buy Price
+                  <input id="buyPrice" name="buyPrice" inputmode="decimal" min="0.01" step="0.01" placeholder="185.50" type="number" required>
+                </label>
+                <label>
+                  Current
+                  <input id="currentPrice" name="currentPrice" inputmode="decimal" min="0.01" step="0.01" placeholder="198.20" type="number" required>
+                </label>
+              </div>
+
+              <div class="fraction-preview">
+                <span>Estimated shares</span>
+                <strong id="sharePreview">0.0000</strong>
+              </div>
+
+              <div class="button-row">
+                <button class="primary-button" type="submit">Add Buy</button>
+                <button class="ghost-button" id="quoteButton" type="button">Get Price</button>
+                <button class="ghost-button" id="cancelEditButton" type="button">Cancel</button>
+              </div>
+              <p class="microcopy" id="quoteStatus">Use Get Price to pull a public market quote when available.</p>
+            </form>
+
+            <section class="panel advisor-panel" id="advisor">
+              <div class="panel-heading">
+                <div>
+                  <h2>AI Advisor</h2>
+                  <p id="selectedStockLabel">Select a holding</p>
+                </div>
+              </div>
+
+              <label>
+                Holding
+                <select id="advisorStock"></select>
+              </label>
+
+              <div class="control-group">
+                <span>Risk</span>
+                <div class="segmented-row" role="group" aria-label="Risk level">
+                  <label class="segmented-option">
+                    <input type="radio" name="risk" value="low" checked>
+                    <span>Low</span>
+                  </label>
+                  <label class="segmented-option">
+                    <input type="radio" name="risk" value="medium">
+                    <span>Medium</span>
+                  </label>
+                  <label class="segmented-option">
+                    <input type="radio" name="risk" value="high">
+                    <span>High</span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="control-group">
+                <span>Goal</span>
+                <div class="segmented-row two-up" role="group" aria-label="Investment goal">
+                  <label class="segmented-option">
+                    <input type="radio" name="goal" value="short" checked>
+                    <span>Short</span>
+                  </label>
+                  <label class="segmented-option">
+                    <input type="radio" name="goal" value="long">
+                    <span>Long</span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="projection-controls">
+                <label>
+                  Expected ROI
+                  <input id="expectedRoi" inputmode="decimal" step="0.1" type="number">
+                </label>
+                <label>
+                  Horizon
+                  <select id="projectionMonths">
+                    <option value="1">1 month</option>
+                    <option value="3" selected>3 months</option>
+                    <option value="6">6 months</option>
+                    <option value="12">12 months</option>
+                  </select>
+                </label>
+              </div>
+
+              <button class="primary-button full-button" id="marketSignalButton" type="button">Analyze Market</button>
+              <div class="market-signal" id="marketSignal">
+                <span>Market AI</span>
+                <strong>No live signal yet</strong>
+                <p>Pull a quote to compare trend, momentum, and volatility.</p>
+              </div>
+
+              <div class="recommendation" id="recommendation">
+                <span>Recommendation</span>
+                <strong>HOLD</strong>
+                <p>Add or select a holding to run the advisor.</p>
+              </div>
+            </section>
+          </div>
+
+          <div class="right-column">
+            <section class="analytics-grid">
+              <section class="panel performance-panel">
+                <div class="panel-heading">
+                  <div>
+                    <h2>Trade Difference</h2>
+                    <p>Profit and loss by holding</p>
+                  </div>
+                </div>
+                <div class="chart-shell">
+                  <canvas id="performanceChart" width="720" height="320" aria-label="Profit and loss chart"></canvas>
+                </div>
+              </section>
+
+              <section class="panel chart-panel">
+                <div class="panel-heading">
+                  <div>
+                    <h2>Allocation</h2>
+                    <p id="holdingCount">0 holdings</p>
+                  </div>
+                </div>
+                <div class="allocation-list" id="allocationList"></div>
+              </section>
+            </section>
+
+            <section class="scenario-grid panel" id="scenarioGrid">
+              <article>
+                <span>Sell Today</span>
+                <strong>$0.00</strong>
+                <p>Locked-in result</p>
+              </article>
+              <article>
+                <span>Hold Estimate</span>
+                <strong>$0.00</strong>
+                <p>Projected result</p>
+              </article>
+            </section>
+
+            <section class="panel table-panel" id="holdings">
+              <div class="panel-heading">
+                <div>
+                  <h2>Holdings</h2>
+                  <p>Saved in this browser</p>
+                </div>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Ticker</th>
+                      <th>Shares</th>
+                      <th>Invested</th>
+                      <th>Avg Cost</th>
+                      <th>Value</th>
+                      <th>ROI</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="holdingsBody"></tbody>
+                </table>
+              </div>
+              <div class="empty-state" id="emptyState">
+                <strong>No holdings yet</strong>
+                <span>Add your first stock or load the demo portfolio.</span>
+              </div>
+            </section>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>

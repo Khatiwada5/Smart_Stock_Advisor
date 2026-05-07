@@ -1,99 +1,132 @@
-# Smart_Stock_Advisor
-📊 Smart Stock Advisor
-A Python-based CLI application that helps users track stock performance and receive intelligent buy/sell recommendations using rule-based analysis.
+# Smart Stock Advisor
 
-🚀 Overview
+Smart Stock Advisor is a browser-based portfolio workspace for tracking stock holdings and getting simple rule-based buy, hold, or sell recommendations.
 
-Smart Stock Advisor is a simple financial tool that simulates how an analyst evaluates stocks. Users can input stock data, track performance, and receive recommendations based on risk tolerance and investment goals.
+The project now includes a working app experience plus the original Python CLI for learning and testing the advisor logic.
 
-This project demonstrates:
+## Run the App
 
-* File handling with JSON
-* Decision-making logic (rule-based “AI”)
-* Input validation
-* Command-line interface design
+Start the local demo server:
 
+```bash
+python3 server.py
+```
 
-🧠 Features
+Then open:
 
-➕ Add stocks (buy price & current price)
-📊 View portfolio with percentage change
-🤖 Analyze stocks using decision logic
-🎯 Recommendations based on:
+```text
+http://127.0.0.1:8000/index.html
+```
 
- Risk level (low / medium / high)
- Investment goal (short-term / long-term)
- 💾 Saves data using JSON
+No install step is required. The app saves holdings in the browser with `localStorage`.
 
+## Public Link Deployment
 
-⚙️ Technologies Used
+Deploy with Vercel to make the app accessible to anyone with a link.
 
-* Python
-* JSON
-* Command Line Interface (CLI)
+1. Push this repo to GitHub.
+2. Go to [vercel.com](https://vercel.com) and import the GitHub repo.
+3. Keep the default project settings.
+4. Deploy.
 
+Vercel will serve the frontend and the Python market endpoint at the same public URL. The app will keep using `/api/market?ticker=AAPL` for live quote signals.
 
-🛠️ How It Works
+GitHub Pages can host the visual app, but it cannot run the Python market AI endpoint. Use Vercel if you want the full experience.
 
-1. User adds stock information
-2. System calculates percentage change
-3. User selects risk level and goal
-4. Advisor engine gives recommendation
+## App Features
 
-Example:
-Stock: AAPL
-Change: +12%
-Risk: Low
-Goal: Short-term
+- Add buys with ticker, dollar amount, buy price, and current price
+- Automatically calculate fractional shares from dollars invested
+- Add multiple buys for the same ticker at different prices
+- Track average cost across all buys
+- View total cost, current value, total return, and portfolio change
+- Scan holdings in a responsive table
+- Add to or delete any holding
+- View allocation bars by current market value
+- View a profit/loss graph showing the trade difference by holding
+- Choose risk level and investing goal for recommendations
+- Compare selling today against a hold estimate
+- Adjust expected ROI and projection horizon
+- Use a rule-based AI score to judge the projected setup
+- Pull public market quote and trend data through the local server
+- Generate a simple up/down/neutral market signal from moving averages and momentum
+- Load a demo portfolio for quick testing
+- Clear browser-saved holdings
 
-→ Recommendation: SELL (Lock in profit)
+## Recommendation Rules
 
-📁 Project Structure
+The advisor uses rule-based educational logic:
 
+- Short-term goals favor locking in gains and cutting losses sooner.
+- Long-term goals can tolerate larger price swings.
+- Low-risk investors are guided toward more cautious choices.
+- Medium- and high-risk investors may be shown buy-more opportunities after larger drops.
+
+This is not financial advice.
+
+## ROI Projection
+
+The advisor panel includes a what-if projection:
+
+- `Sell Today` shows the current profit or loss if the position is closed now.
+- `Hold Estimate` shows the projected profit or loss using the expected ROI input.
+- `Difference` shows the extra estimated result from holding instead of selling.
+- `AI Score` is a simple rule-based confidence score using ROI, risk, goal, and current performance.
+
+If the expected ROI field is blank, the app fills in a model estimate based on the selected risk level, goal, current stock performance, and time horizon.
+
+## Market AI
+
+The `Analyze Market` button asks the local Python server for public market data. The server checks recent quote and historical price data, then creates a simple signal:
+
+- `Up` when price and momentum are above the recent trend
+- `Down` when price and momentum are below the recent trend
+- `Neutral` when the setup is mixed
+
+The signal is rule-based and educational. It is not a guarantee that a stock will go up or down.
+
+## Project Structure
+
+```text
 smart-stock-advisor/
-│── main.py
-│── advisor.py
-│── portfolio.json
-│── README.md
+|-- index.html
+|-- styles.css
+|-- app.js
+|-- server.py
+|-- market_data.py
+|-- api/
+|   |-- market.py
+|-- vercel.json
+|-- advisor.py
+|-- main.py
+|-- portfolio.json
+|-- test_advisor.py
+|-- README.md
+```
 
+## Python CLI
 
-📌 Example Menu
+The command-line version is still available:
 
-1. Add Stock
-2. View Portfolio
-3. Analyze Stock
-4. Exit
+```bash
+python3 main.py
+```
 
-🤝 Collaboration
+## Run Tests
 
-This project was developed collaboratively using GitHub. Tasks were divided between team members, and each contributor made meaningful commits. We communicated through messaging and coordinated work using version control.
+```bash
+python3 -m unittest
+```
 
+## Future Improvements
 
-⚠️ Limitations
+- Add CSV import and export
+- Add live prices from a stock API
+- Add watchlists and alerts
+- Add portfolio sector tags
+- Deploy the app with GitHub Pages
 
-* No live stock API (manual input only)
-* Rule-based logic (not real machine learning)
-* CLI-based (no graphical interface)
+## Authors
 
-🔥 Future Improvements
-
-* Add live stock price API
-* Portfolio performance summary
-* Web or GUI interface
-* More advanced analysis logic
-
-📚 What I Learned
-
-* Using GitHub for collaboration
-* Structuring a real project
-* Handling user input and errors
-* Building simple decision systems
-
----
-👤 Author
-
-~ Nirvana Khatiwada
-~ Aksha Khadgi
-
-
-
+- Nirvana Khatiwada
+- Aksha Khadgi
